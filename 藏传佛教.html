@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>藏传佛教 · 旅行笔记</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;600;700&family=Cinzel:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --maroon:#6B1A1A; --dark-maroon:#3D0C0C; --deep:#1E0505;
+  --gold:#C8973A; --light-gold:#E8C06A; --pale-gold:#F0DCA8;
+  --cream:#FDF6EC; --warm-white:#FAF3E8;
+  --text-dark:#2C1810; --text-mid:#5C3D2E; --sand:#D4A76A;
+  --body-dark:#E0CFA0; --body-darker:#DEC89A;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{width:100%;height:100%;font-family:'Noto Serif SC',serif;background:#1E0505;overflow:hidden;}
+.deck{width:100vw;height:100vh;position:relative;overflow:hidden;}
+.slide{position:absolute;inset:0;opacity:0;pointer-events:none;transition:opacity .7s ease;display:flex;flex-direction:column;}
+.slide.active{opacity:1;pointer-events:all;}
+
+/* NAV */
+.nav{position:fixed;bottom:1.8rem;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:1.2rem;z-index:100;background:rgba(30,5,5,.78);backdrop-filter:blur(8px);padding:.55rem 1.4rem;border-radius:2rem;border:1px solid rgba(200,151,58,.3);}
+.nav button{background:none;border:none;color:var(--gold);font-size:1.1rem;cursor:pointer;padding:.2rem .6rem;opacity:.7;transition:opacity .2s;font-family:inherit;}
+.nav button:hover{opacity:1;}
+.nav-dots{display:flex;gap:.4rem;align-items:center;}
+.dot{width:5px;height:5px;border-radius:50%;background:var(--gold);opacity:.3;transition:all .3s;cursor:pointer;}
+.dot.active{opacity:1;width:18px;border-radius:3px;}
+.slide-counter{color:var(--sand);font-size:.75rem;font-family:'Cinzel',serif;letter-spacing:.1em;min-width:3rem;text-align:center;}
+
+/* SHARED */
+.mandala-bg{position:absolute;border-radius:50%;border:1px solid rgba(200,151,58,.12);pointer-events:none;}
+.section-label{font-family:'Cinzel',serif;font-size:.7rem;letter-spacing:.3em;text-transform:uppercase;color:var(--sand);margin-bottom:.9rem;}
+.slide-title-light{font-size:clamp(1.8rem,3.5vw,2.6rem);font-weight:700;color:var(--light-gold);line-height:1.2;}
+.slide-title-dark{font-size:clamp(1.8rem,3.5vw,2.6rem);font-weight:700;color:var(--maroon);line-height:1.2;}
+.gold-rule{width:3rem;height:2px;background:var(--gold);margin:1rem 0 1.4rem;}
+
+/* ANIM */
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+.slide.active .ai{animation:fadeUp .55s ease forwards;opacity:0;}
+.slide.active .ai:nth-child(1){animation-delay:.08s}
+.slide.active .ai:nth-child(2){animation-delay:.18s}
+.slide.active .ai:nth-child(3){animation-delay:.28s}
+.slide.active .ai:nth-child(4){animation-delay:.38s}
+.slide.active .ai:nth-child(5){animation-delay:.48s}
+.slide.active .ai:nth-child(6){animation-delay:.56s}
+
+/* PHOTO PANEL — reusable full-bleed image column */
+.photo-panel{position:relative;overflow:hidden;}
+.photo-panel img{width:100%;height:100%;object-fit:cover;display:block;}
+.photo-panel .photo-credit{position:absolute;bottom:.5rem;right:.7rem;font-size:.62rem;color:rgba(255,255,255,.45);font-family:'Cinzel',serif;letter-spacing:.05em;}
+.photo-panel .photo-overlay{position:absolute;inset:0;background:linear-gradient(135deg,rgba(30,5,5,.45) 0%,transparent 60%);}
+
+/* ── S1 COVER ── */
+#s1{background:var(--deep);justify-content:center;align-items:flex-start;padding:0 8vw;overflow:hidden;}
+#s1 .mandala-bg:nth-child(1){width:70vmin;height:70vmin;right:-10vmin;top:50%;transform:translateY(-50%);border-color:rgba(200,151,58,.07)}
+#s1 .mandala-bg:nth-child(2){width:55vmin;height:55vmin;right:-2vmin;top:50%;transform:translateY(-50%)}
+#s1 .mandala-bg:nth-child(3){width:40vmin;height:40vmin;right:5vmin;top:50%;transform:translateY(-50%)}
+#s1 .mandala-bg:nth-child(4){width:26vmin;height:26vmin;right:12vmin;top:50%;transform:translateY(-50%);border-color:rgba(200,151,58,.22)}
+#s1 .cover-tag{font-family:'Cinzel',serif;font-size:clamp(.6rem,1.2vw,.85rem);letter-spacing:.25em;color:var(--sand);margin-bottom:2rem;opacity:0;animation:fadeUp .8s .3s forwards;}
+#s1 h1{font-size:clamp(3.5rem,8vw,7rem);font-weight:700;color:var(--light-gold);line-height:1.1;letter-spacing:.05em;margin-bottom:.6rem;opacity:0;animation:fadeUp .8s .5s forwards;}
+#s1 .cover-en{font-family:'Cinzel',serif;font-size:clamp(1rem,2.2vw,1.6rem);color:var(--sand);letter-spacing:.2em;margin-bottom:2.5rem;opacity:0;animation:fadeUp .8s .7s forwards;}
+#s1 .cover-line{width:6rem;height:1px;background:linear-gradient(90deg,var(--gold),transparent);margin-bottom:2rem;opacity:0;animation:fadeUp .8s .9s forwards;}
+#s1 .cover-sub{font-size:clamp(.85rem,1.5vw,1.05rem);color:var(--pale-gold);font-weight:300;line-height:2;max-width:28rem;opacity:0;animation:fadeUp .8s 1.1s forwards;}
+#s1 .cover-dharma{position:absolute;right:8vw;top:50%;transform:translateY(-50%);font-size:clamp(5rem,12vw,10rem);color:rgba(200,151,58,.07);pointer-events:none;}
+
+/* ── S2 YONGHE ── */
+#s2{background:var(--cream);display:grid;grid-template-columns:1fr 1fr;}
+#s2 .left-panel{background:var(--maroon);display:flex;flex-direction:column;justify-content:center;padding:6vh 5vw 8vh;position:relative;overflow:hidden;}
+#s2 .left-panel::after{content:'';position:absolute;right:0;top:0;bottom:0;width:3px;background:linear-gradient(180deg,transparent,var(--gold),transparent);}
+#s2 .right-panel{display:flex;flex-direction:column;justify-content:center;padding:6vh 5vw 8vh;}
+.yh-big-num{font-family:'Cinzel',serif;font-size:clamp(3rem,6vw,5rem);color:var(--light-gold);font-weight:600;line-height:1;margin-bottom:.2rem;}
+.yh-num-label{font-size:.85rem;color:var(--sand);margin-bottom:1.8rem;}
+.yh-facts{display:flex;flex-direction:column;gap:1rem;}
+.yh-fact{display:flex;align-items:flex-start;gap:.9rem;}
+.yh-dot{width:6px;height:6px;border-radius:50%;background:var(--gold);flex-shrink:0;margin-top:.55rem;}
+.yh-fact-text{font-size:clamp(.82rem,1.2vw,.95rem);color:#E8D5B0;line-height:1.8;font-weight:300;}
+.yh-fact-text strong{color:var(--light-gold);}
+#s2 .right-panel p{font-size:clamp(.88rem,1.3vw,1rem);color:var(--text-mid);line-height:2;margin-bottom:1rem;font-weight:300;}
+#s2 .right-panel p strong{color:var(--maroon);font-weight:600;}
+.yh-tip{background:rgba(107,26,26,.08);border-left:3px solid var(--maroon);padding:.9rem 1.1rem;font-size:clamp(.8rem,1.1vw,.92rem);color:var(--text-mid);line-height:1.8;margin-top:1rem;font-style:italic;}
+
+/* ── S3 WHAT IS — 3-col: text | divider | photo ── */
+#s3{background:var(--cream);display:grid;grid-template-columns:1fr 1fr;}
+#s3 .left-panel{background:var(--maroon);display:flex;flex-direction:column;justify-content:center;padding:6vh 5vw 8vh;position:relative;overflow:hidden;}
+#s3 .left-panel::after{content:'';position:absolute;right:0;top:0;bottom:0;width:3px;background:linear-gradient(180deg,transparent,var(--gold),transparent);}
+#s3 .right-panel{display:flex;flex-direction:column;justify-content:center;padding:6vh 5vw 8vh;}
+.word-item{display:flex;align-items:flex-start;gap:1rem;margin-bottom:1.3rem;}
+.word-num{font-family:'Cinzel',serif;font-size:1.5rem;color:var(--gold);font-weight:600;line-height:1.1;min-width:1.8rem;margin-top:.1rem;}
+.word-label{color:var(--light-gold);font-size:1rem;font-weight:600;margin-bottom:.25rem;}
+.word-subtext{font-size:.9rem;color:#E8D5B0;line-height:1.65;font-weight:300;}
+#s3 .right-panel p{font-size:clamp(.88rem,1.3vw,1rem);color:var(--text-mid);line-height:2;margin-bottom:1rem;font-weight:300;}
+#s3 .right-panel p strong{color:var(--maroon);font-weight:600;}
+
+/* ── S4 HISTORY ── */
+#s4{background:var(--dark-maroon);padding:4vh 6vw 8vh;display:flex;flex-direction:column;}
+#s4 .top-bar{margin-bottom:2.5vh;flex-shrink:0;}
+.timeline-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.5vw;flex:1;min-height:0;}
+.tl-item{background:rgba(255,255,255,.05);border:1px solid rgba(200,151,58,.22);border-top:3px solid var(--gold);padding:1.6rem 1.3rem;display:flex;flex-direction:column;}
+.tl-year{font-family:'Cinzel',serif;font-size:clamp(1rem,1.8vw,1.35rem);color:var(--gold);font-weight:600;margin-bottom:.6rem;}
+.tl-event{font-size:clamp(.9rem,1.3vw,1.05rem);color:var(--light-gold);font-weight:700;margin-bottom:.7rem;line-height:1.4;}
+.tl-detail{font-size:clamp(.8rem,1.05vw,.92rem);color:var(--body-dark);line-height:1.8;font-weight:300;}
+
+/* ── S5 SCHOOLS ── */
+#s5{background:var(--cream);padding:3.5vh 5vw 8vh;display:flex;flex-direction:column;}
+#s5 .schools-header{margin-bottom:1.8vh;flex-shrink:0;}
+.schools-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.5vw;flex:1;min-height:0;}
+.school-card{border-radius:2px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.1);display:flex;flex-direction:column;}
+.school-card-top{padding:1.2rem 1rem 1rem;display:flex;flex-direction:column;align-items:center;gap:.25rem;flex-shrink:0;}
+.school-name-zh{font-size:clamp(1.2rem,2vw,1.45rem);font-weight:700;color:#fff;}
+.school-name-en{font-family:'Cinzel',serif;font-size:.78rem;color:rgba(255,255,255,.75);letter-spacing:.1em;}
+.school-nick{font-size:.76rem;background:rgba(255,255,255,.18);color:#fff;padding:.16rem .65rem;border-radius:1rem;margin-top:.25rem;}
+.school-card-body{background:#fff;padding:1rem 1.1rem;flex:1;display:flex;flex-direction:column;}
+.school-era{font-family:'Cinzel',serif;font-size:.7rem;color:var(--sand);letter-spacing:.06em;margin-bottom:.5rem;}
+.school-desc{font-size:clamp(.78rem,1.05vw,.9rem);color:var(--text-mid);line-height:1.75;font-weight:300;margin-bottom:.7rem;}
+.school-traits{display:flex;flex-wrap:wrap;gap:.3rem;margin-bottom:.7rem;}
+.school-trait{font-size:.7rem;background:rgba(107,26,26,.07);color:var(--maroon);border:1px solid rgba(107,26,26,.18);padding:.12rem .5rem;border-radius:.8rem;font-weight:500;}
+.school-region{font-size:.76rem;color:var(--text-mid);margin-bottom:.5rem;}
+.school-region span{color:#5A3A6B;font-weight:600;}
+.school-temple{font-size:.76rem;color:var(--text-mid);border-top:1px solid #f0e8dc;padding-top:.55rem;margin-top:auto;}
+.school-temple span{color:var(--maroon);font-weight:600;}
+
+/* ── S6 TULKU ── */
+#s6{background:var(--deep);padding:4vh 7vw 8vh;display:flex;flex-direction:column;overflow:hidden;}
+.tulku-layout{display:grid;grid-template-columns:1fr 1.4fr;gap:4vw;flex:1;min-height:0;align-items:start;}
+.tulku-concept{background:rgba(200,151,58,.1);border-left:3px solid var(--gold);padding:1.2rem 1.4rem;font-size:clamp(.85rem,1.2vw,.97rem);color:#E8D5B0;line-height:1.9;font-weight:300;margin:1rem 0;}
+.tulku-steps{display:flex;flex-direction:column;gap:.8rem;}
+.tulku-step{display:flex;align-items:flex-start;gap:1rem;}
+.step-num{background:var(--gold);color:var(--deep);width:1.6rem;height:1.6rem;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Cinzel',serif;font-size:.75rem;font-weight:600;flex-shrink:0;margin-top:.1rem;}
+.step-text{font-size:clamp(.8rem,1.1vw,.9rem);color:var(--body-dark);line-height:1.7;}
+.step-text strong{color:var(--light-gold);}
+.info-box{background:rgba(255,255,255,.04);border:1px solid rgba(200,151,58,.2);padding:1.4rem 1.5rem;}
+.info-box-title{font-size:.78rem;color:var(--gold);font-family:'Cinzel',serif;letter-spacing:.1em;margin-bottom:.8rem;}
+.info-box-body{font-size:clamp(.82rem,1.1vw,.92rem);color:var(--body-dark);line-height:1.9;font-weight:300;}
+
+/* ── S7 DALAI & PANCHEN ── */
+#s7{background:var(--dark-maroon);padding:4vh 6vw 8vh;display:flex;flex-direction:column;}
+.two-figures{display:grid;grid-template-columns:1fr 1fr;gap:3vw;flex:1;min-height:0;margin-top:2vh;}
+.figure-card{background:rgba(0,0,0,.28);border:1px solid rgba(200,151,58,.25);padding:1.8rem 1.7rem;position:relative;overflow:hidden;display:flex;flex-direction:column;}
+.figure-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;}
+.figure-card.dalai::before{background:linear-gradient(90deg,var(--gold),var(--light-gold));}
+.figure-card.panchen::before{background:linear-gradient(90deg,#9B7B3A,var(--sand));}
+.figure-title{font-size:clamp(1.3rem,2.2vw,1.7rem);font-weight:700;color:var(--light-gold);margin-bottom:.3rem;}
+.figure-subtitle{font-family:'Cinzel',serif;font-size:.75rem;color:var(--sand);letter-spacing:.12em;margin-bottom:1.2rem;}
+.figure-desc{font-size:clamp(.82rem,1.2vw,.95rem);color:#E0CFA0;line-height:1.9;font-weight:300;flex:1;}
+.figure-desc strong{color:var(--light-gold);font-weight:600;}
+.figure-note{margin-top:1rem;padding-top:1rem;border-top:1px solid rgba(200,151,58,.2);font-size:clamp(.78rem,1vw,.88rem);color:var(--sand);font-style:italic;line-height:1.7;}
+
+/* ── S8 10TH PANCHEN ── */
+#s8{display:grid;grid-template-columns:1fr 1fr;}
+#s8 .left-panel{background:#220909;display:flex;flex-direction:column;justify-content:center;padding:6vh 5vw 8vh;position:relative;overflow:hidden;}
+#s8 .left-panel::after{content:'';position:absolute;right:0;top:0;bottom:0;width:2px;background:linear-gradient(180deg,transparent,var(--gold),transparent);}
+#s8 .right-panel{display:flex;flex-direction:column;justify-content:center;padding:6vh 5vw 8vh;background:var(--warm-white);}
+.panchen10-name{font-size:clamp(1.4rem,2.5vw,2rem);font-weight:700;color:var(--light-gold);line-height:1.2;margin-bottom:.3rem;}
+.panchen10-en{font-family:'Cinzel',serif;font-size:.8rem;color:var(--sand);letter-spacing:.1em;margin-bottom:.4rem;}
+.panchen10-years{font-size:.85rem;color:var(--gold);margin-bottom:1.3rem;}
+.panchen10-quote{background:rgba(200,151,58,.12);border-left:3px solid var(--gold);padding:1rem 1.2rem;font-size:clamp(.85rem,1.2vw,1rem);color:#E8D5B0;line-height:1.9;font-style:italic;margin-bottom:1.2rem;}
+.panchen10-body{font-size:clamp(.82rem,1.1vw,.92rem);color:var(--body-dark);line-height:1.9;font-weight:300;margin-bottom:1.2rem;}
+.p10-tag{background:rgba(200,151,58,.15);border:1px solid rgba(200,151,58,.3);color:var(--sand);font-size:.75rem;padding:.2rem .7rem;border-radius:1rem;display:inline-block;margin:.2rem;}
+.event-list{display:flex;flex-direction:column;gap:1rem;}
+.event-item{display:flex;gap:1rem;align-items:flex-start;}
+.event-year{font-family:'Cinzel',serif;font-size:.8rem;color:var(--maroon);font-weight:700;min-width:3.5rem;padding-top:.15rem;}
+.event-desc{font-size:clamp(.82rem,1.1vw,.92rem);color:var(--text-mid);line-height:1.75;font-weight:300;}
+.event-desc strong{color:var(--maroon);font-weight:600;}
+
+/* ── S9 PRACTICES — 3-col grid + photo strip ── */
+#s9{background:var(--dark-maroon);padding:4vh 6vw 8vh;display:flex;flex-direction:column;overflow:hidden;}
+.practices-grid{display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(2,1fr);gap:1.5vw;flex:1;min-height:0;margin-top:2vh;}
+.practice-card{background:rgba(255,255,255,.045);border:1px solid rgba(200,151,58,.18);padding:1.3rem 1.2rem;display:flex;flex-direction:column;transition:border-color .3s;position:relative;overflow:hidden;}
+.practice-card:hover{border-color:rgba(200,151,58,.5);}
+.practice-icon{font-size:clamp(1.3rem,2.2vw,1.8rem);margin-bottom:.5rem;}
+.practice-name{font-size:clamp(.95rem,1.4vw,1.05rem);font-weight:600;color:var(--light-gold);margin-bottom:.35rem;}
+.practice-scene{font-size:clamp(.73rem,.95vw,.83rem);color:var(--sand);font-style:italic;margin-bottom:.5rem;line-height:1.5;}
+.practice-meaning{font-size:clamp(.78rem,1vw,.88rem);color:var(--body-dark);line-height:1.75;font-weight:300;}
+
+/* ── S10 TEMPLES — 2x2 with photo column ── */
+#s10{background:var(--cream);display:grid;grid-template-columns:1fr 38%;overflow:hidden;}
+#s10 .temples-content{padding:4vh 4vw 8vh;display:flex;flex-direction:column;overflow:hidden;}
+.temples-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5vw;flex:1;min-height:0;margin-top:2vh;}
+.temple-card{background:#fff;border:1px solid #EAD8C0;display:flex;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.07);}
+.temple-accent{width:4px;flex-shrink:0;}
+.temple-body{padding:1rem 1.2rem;flex:1;display:flex;flex-direction:column;}
+.temple-name{font-size:clamp(.95rem,1.6vw,1.2rem);font-weight:700;color:var(--maroon);margin-bottom:.15rem;}
+.temple-loc{font-size:.7rem;color:var(--sand);font-family:'Cinzel',serif;letter-spacing:.08em;margin-bottom:.6rem;}
+.temple-desc{font-size:clamp(.76rem,1vw,.88rem);color:var(--text-mid);line-height:1.75;font-weight:300;flex:1;}
+.temple-tip{margin-top:.6rem;padding-top:.6rem;border-top:1px solid #f0e8dc;font-size:.74rem;color:var(--maroon);font-style:italic;}
+/* right photo collage */
+#s10 .photo-collage{display:grid;grid-template-rows:1fr 1fr;gap:0;overflow:hidden;}
+#s10 .photo-collage .photo-panel{overflow:hidden;}
+#s10 .photo-collage .photo-panel img{width:100%;height:100%;object-fit:cover;transition:transform .6s ease;}
+#s10 .photo-collage .photo-panel:hover img{transform:scale(1.04);}
+
+/* ── S11 CLOSING ── */
+#s11{background:var(--deep);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:6vh 8vw;overflow:hidden;position:relative;}
+#s11 .mandala-bg:nth-child(1){width:80vmin;height:80vmin;left:50%;top:50%;transform:translate(-50%,-50%)}
+#s11 .mandala-bg:nth-child(2){width:62vmin;height:62vmin;left:50%;top:50%;transform:translate(-50%,-50%)}
+#s11 .mandala-bg:nth-child(3){width:44vmin;height:44vmin;left:50%;top:50%;transform:translate(-50%,-50%)}
+#s11 .closing-mantra{font-size:clamp(.7rem,1.2vw,.9rem);letter-spacing:.3em;color:rgba(200,151,58,.35);margin-bottom:2rem;font-family:'Cinzel',serif;}
+#s11 .closing-main{font-size:clamp(2rem,4.5vw,3.2rem);font-weight:700;color:var(--light-gold);line-height:1.3;margin-bottom:1.5rem;position:relative;z-index:1;}
+#s11 .closing-rule{width:4rem;height:1px;background:var(--gold);margin:0 auto 1.5rem;}
+#s11 .closing-sub{font-size:clamp(.88rem,1.4vw,1.05rem);color:var(--pale-gold);font-weight:300;line-height:2.1;max-width:38rem;margin-bottom:2.5rem;position:relative;z-index:1;}
+#s11 .closing-tashi{font-family:'Cinzel',serif;font-size:clamp(1.1rem,2vw,1.5rem);color:var(--gold);letter-spacing:.25em;margin-bottom:.5rem;}
+#s11 .closing-meaning{font-size:.85rem;color:var(--sand);letter-spacing:.15em;}
+</style>
+</head>
+<body>
+<div class="deck">
+
+<!-- S1 COVER -->
+<div class="slide active" id="s1">
+  <div class="mandala-bg"></div><div class="mandala-bg"></div><div class="mandala-bg"></div><div class="mandala-bg"></div>
+  <div class="cover-tag">TRAVEL NOTES · 旅行笔记</div>
+  <h1>藏传佛教</h1>
+  <div class="cover-en">Tibetan Buddhism</div>
+  <div class="cover-line"></div>
+  <div class="cover-sub">去西藏之前，我以为自己会看到风景。<br>回来之后，我带回来的是一些问题的答案。</div>
+  <div class="cover-dharma">☸</div>
+</div>
+
+<!-- S2 YONGHE -->
+<div class="slide" id="s2">
+  <div class="left-panel">
+    <div class="section-label ai" style="color:var(--sand)">离你最近的藏传佛教</div>
+    <div class="slide-title-light ai">雍和宫</div>
+    <div style="font-family:'Cinzel',serif;font-size:.8rem;color:var(--sand);letter-spacing:.15em;margin-bottom:1.5rem" class="ai">Yonghe Temple · 北京</div>
+    <div class="ai">
+      <div class="yh-big-num">1744</div>
+      <div class="yh-num-label">年正式改建为格鲁派喇嘛寺</div>
+    </div>
+    <div class="yh-facts ai">
+      <div class="yh-fact"><div class="yh-dot"></div><div class="yh-fact-text">原为清朝雍正皇帝的王府，后改建为藏传佛教寺院，是北京规模最大、保存最完整的藏传佛教圣地</div></div>
+      <div class="yh-fact"><div class="yh-dot"></div><div class="yh-fact-text">供奉<strong>18米高整根白檀木弥勒佛像</strong>，世界最大的整木雕刻佛像，列入吉尼斯纪录</div></div>
+      <div class="yh-fact"><div class="yh-dot"></div><div class="yh-fact-text">清朝管理全国藏传佛教事务的行政中心，历史地位举足轻重</div></div>
+    </div>
+  </div>
+  <div class="right-panel">
+    <div class="section-label ai" style="color:var(--sand)">为什么从这里开始讲</div>
+    <div class="slide-title-dark ai" style="font-size:clamp(1.3rem,2.2vw,1.8rem);margin-bottom:.5rem">你可能已经去过了<br>但不一定看懂了</div>
+    <div class="gold-rule ai" style="background:var(--maroon)"></div>
+    <p class="ai">雍和宫每天游客如织，大多数人走马观花——看到转经轮不知道为什么要转，看到唐卡不知道画的是谁，看到那些面目狰狞的神像不知道它们是护法还是鬼怪。</p>
+    <p class="ai">今天想做的事情很简单：<strong>把你在雍和宫、在西藏会遇到的那些画面，一一解释清楚。</strong></p>
+    <p class="ai">等你听完，再去一次雍和宫，或者第一次踏上西藏，你会看见完全不同的东西。</p>
+    <div class="yh-tip ai">☞ 地铁2号/5号线雍和宫站B口。建议工作日早晨前往，人少，气氛更静。</div>
+  </div>
+</div>
+
+<!-- S3 WHAT IS -->
+<div class="slide" id="s3">
+  <div class="left-panel">
+    <div class="section-label ai">Introduction</div>
+    <div class="slide-title-light ai">它是什么？</div>
+    <div class="gold-rule ai"></div>
+    <div class="ai">
+      <div class="word-item">
+        <div class="word-num">①</div>
+        <div><div class="word-label">佛教的一支</div><div class="word-subtext">与汉传、南传并列，起源于印度，在西藏形成独特传统</div></div>
+      </div>
+      <div class="word-item">
+        <div class="word-num">②</div>
+        <div><div class="word-label">密宗（金刚乘）</div><div class="word-subtext">不只是诵经拜佛，更强调修行方法、师徒传承与内在转化</div></div>
+      </div>
+      <div class="word-item">
+        <div class="word-num">③</div>
+        <div><div class="word-label">一种生活方式</div><div class="word-subtext">对藏人来说，它不是宗教信仰，而是日常生活的底色</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="right-panel">
+    <div class="section-label ai" style="color:var(--sand)">背景</div>
+    <div class="slide-title-dark ai">为什么它和你想的不一样</div>
+    <div class="gold-rule ai" style="background:var(--maroon)"></div>
+    <p class="ai">在西藏，你会看到老人手持转经轮走路，看到信众五体投地从家乡一路磕到拉萨，看到僧侣在寺院里击掌辩论——这些<strong>看得见的修行</strong>，背后都有一套完整的世界观。</p>
+    <p class="ai">藏传佛教诞生于公元7世纪，在吸收了印度密宗之后，又融合了西藏本土的苯教信仰，形成了<strong>独一无二的精神传统</strong>。它不是简化版的佛教，而是另一个完整的宇宙。</p>
+    <p class="ai">了解它，会让你在西藏看到的每一件事都<strong>多出一层意思</strong>。</p>
+  </div>
+</div>
+
+<!-- S4 HISTORY -->
+<div class="slide" id="s4">
+  <div class="top-bar">
+    <div class="section-label" style="color:var(--sand)">Chapter 01 · 历史</div>
+    <div class="slide-title-light">怎么来的</div>
+  </div>
+  <div class="timeline-grid">
+    <div class="tl-item ai"><div class="tl-year">7世纪</div><div class="tl-event">佛教入藏</div><div class="tl-detail">松赞干布统一西藏，娶唐朝文成公主和尼泊尔尺尊公主，两位公主分别带来了 8 岁和 12 岁的释迦牟尼佛像和佛经。赞干布派人创制藏文，翻译佛经，并在拉萨修建大昭寺和小昭寺供奉佛像，佛教从此正式在吐蕃贵族间传播。</div></div>
+    <div class="tl-item ai"><div class="tl-year">8世纪</div><div class="tl-event">密宗扎根</div><div class="tl-detail">印度高僧莲花生大士入藏，将密宗带入西藏。他降服了本土鬼神，把它们转化为佛法护法神。西藏第一座正式寺院桑耶寺建成。赤松德赞剃度了西藏历史上第一批僧人“七觉士”，佛教三宝（佛、法、僧）齐备。</div></div>
+    <div class="tl-item ai"><div class="tl-year">11世纪</div><div class="tl-event">改革与复兴</div><div class="tl-detail">经历「朗达玛灭佛」的黑暗期后，佛教复兴运动分为上下两路：上路弘传以阿里托林寺为中心，由拉喇嘛益西沃派遣留学生并迎请阿底峡尊者入藏；下路弘传始于安多地区僧团戒律传承。各教派相继形成，藏传佛教进入百家争鸣时代。</div></div>
+    <div class="tl-item ai"><div class="tl-year">14–15世纪</div><div class="tl-event">格鲁派崛起</div><div class="tl-detail">宗喀巴大师创立格鲁派（黄教），强调戒律与辩经。明永乐七年，宗喀巴大师弟子创立甘丹寺，达赖与班禅转世体系随后形成，影响延续至今。</div></div>
+  </div>
+</div>
+
+<!-- S5 SCHOOLS -->
+<div class="slide" id="s5">
+  <div class="schools-header">
+    <div class="section-label" style="color:var(--sand)">Chapter 01 · 教派</div>
+    <div class="slide-title-dark">四大教派</div>
+    <div style="font-size:.86rem;color:var(--text-mid);margin-top:.3rem;font-weight:300">寺庙门口飘的旗是什么颜色，往往就能告诉你这里属于哪个教派</div>
+  </div>
+  <div class="schools-grid">
+    <div class="school-card ai">
+      <div class="school-card-top" style="background:#6B1A1A"><div class="school-name-zh">宁玛派</div><div class="school-name-en">Nyingma</div><div class="school-nick">红教 · 最古老</div></div>
+      <div class="school-card-body"><div class="school-era">公元8世纪 · 莲花生大士创立</div><div class="school-desc">“宁玛”在藏语中意为“古”、“旧”，它是藏传佛教中历史最悠久的教派，该派僧侣佩戴红色僧帽，故称“红教”。以「伏藏」著称——被刻意藏起的教法，等待有缘人在未来发现。修行神秘，不强调辩经与严格戒律，部分僧侣允许娶妻生子。</div><div class="school-traits"><span class="school-trait">大圆满法</span><span class="school-trait">伏藏传统</span><span class="school-trait">重禅修体验</span></div><div class="school-region">主要分布：<span>偏远山区和康巴、安多地区</span></div><div class="school-temple">代表寺院：<span>敏珠林寺（西藏山南地区）</span></div></div>
+    </div>
+    <div class="school-card ai">
+      <div class="school-card-top" style="background:#4A3570"><div class="school-name-zh">萨迦派</div><div class="school-name-en">Sakya</div><div class="school-nick">花教 · 学术重镇</div></div>
+      <div class="school-card-body"><div class="school-era">公元11世纪 · 贡却杰布创立</div><div class="school-desc">萨迦”意为“灰白土”，因其主寺萨迦寺建在颜色灰白的土地上而得名。其家族传承模式（叔侄相传或父子相传）是该派的一大特色。历史上在元朝时期地位极高，萨迦派领袖八思巴曾被元世祖忽必烈封为帝师，协助管理西藏地方行政。该派寺庙围墙上涂有象征文殊菩萨（红）、观音菩萨（白）、金刚手菩萨（黑）的红、白、黑三色条纹，故称“花教”。</div><div class="school-traits"><span class="school-trait">道果法</span><span class="school-trait">政教合一</span><span class="school-trait">重学术</span></div><div class="school-region">主要分布：<span>日喀则地区、蒙古</span></div><div class="school-temple">代表寺院：<span>萨迦寺（日喀则）</span></div></div>
+    </div>
+    <div class="school-card ai">
+      <div class="school-card-top" style="background:#1A3D5C"><div class="school-name-zh">噶举派</div><div class="school-name-en">Kagyu</div><div class="school-nick">白教 · 修行传承</div></div>
+      <div class="school-card-body"><div class="school-era">公元11世纪 · 玛尔巴译师创立</div><div class="school-desc">“噶举”意为“教传”或“语传”，强调通过口耳相传、秘密传授的方式由师徒代代相传。玛尔巴弟子、诗人米拉日巴在雪山洞窟苦修多年，冻得皮肤发绿，其道歌至今传唱，是藏传佛教最动人的修行故事之一。该派早期修行者常穿白色僧袍，因此被称为“白教”。活佛转世制度最早由该派下的噶玛噶举派（噶玛巴）创立，随后被其他教派纷纷效仿。</div><div class="school-traits"><span class="school-trait">大手印法</span><span class="school-trait">拙火修行</span><span class="school-trait">重师承</span></div><div class="school-region">主要分布：<span>西藏中西部、不丹</span></div><div class="school-temple">代表寺院：<span>楚布寺（西藏）</span></div></div>
+    </div>
+    <div class="school-card ai">
+      <div class="school-card-top" style="background:#1E4A1E"><div class="school-name-zh">格鲁派</div><div class="school-name-en">Gelug</div><div class="school-nick">黄教 · 影响最广</div></div>
+      <div class="school-card-body"><div class="school-era">公元14世纪 · 宗喀巴大师创立</div><div class="school-desc">“格鲁”意为“善规”，强调严守戒律、重振佛法规范。僧侣佩戴黄色僧帽，故称“黄教”。重视显密并重，特别强调学术训练和辩经，建立了完整的佛学教育体系，达赖与班禅均属此派。因受清政府扶持确认，格鲁派成为西藏地方的执政教派，逐步占据了藏传佛教的主导地位。</div><div class="school-traits"><span class="school-trait">严格戒律</span><span class="school-trait">辩经制度</span><span class="school-trait">格西学位</span></div><div class="school-region">主要分布：<span>拉萨周边、蒙古</span></div><div class="school-temple">代表寺院：<span>甘丹寺 / 扎什伦布寺</span></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- S6 TULKU -->
+<div class="slide" id="s6">
+  <div style="flex-shrink:0;margin-bottom:2vh">
+    <div class="section-label" style="color:var(--sand)">Chapter 02 · 核心制度</div>
+    <div class="slide-title-light">活佛转世</div>
+  </div>
+  <div class="tulku-layout">
+    <div>
+      <div class="tulku-concept ai">藏传佛教相信，高僧大德圆寂后，其意识不会消散，而会主动选择再度投生，以便继续度化众生。这样的转世者被称为<strong style="color:var(--light-gold)">「活佛」</strong>或<strong style="color:var(--light-gold)">「祖古」</strong>（Tulku）。<br><br>这不是迷信，而是建立在轮回观与菩萨道上的制度——菩萨发愿生生世世救度众生，活佛就是这个誓愿的实践。</div>
+      <div class="section-label" style="color:var(--sand);margin-bottom:.8rem">认定程序</div>
+      <div class="tulku-steps ai">
+        <div class="tulku-step"><div class="step-num">1</div><div class="step-text"><strong>寻访</strong> — 依前任活佛圆寂前的预兆、神谕（，在特定地区寻找候选男孩</div></div>
+        <div class="tulku-step"><div class="step-num">2</div><div class="step-text"><strong>测试</strong> — 候选者须辨认前任活佛遗物，并表现出符合的行为特征</div></div>
+        <div class="tulku-step"><div class="step-num">3</div><div class="step-text"><strong>确认</strong> — 由高级喇嘛、神谕、占卜等多重方式共同确认</div></div>
+        <div class="tulku-step"><div class="step-num">4</div><div class="step-text"><strong>培育</strong> — 确认后进入寺院，接受系统的宗教教育</div></div>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:1.5rem">
+      <div class="info-box ai" style="border-left:3px solid var(--gold)">
+        <div class="info-box-title">为什么这个制度重要</div>
+        <div class="info-box-body">在西藏，活佛不只是宗教领袖——他们是社区的精神中心，寺院的法脉传承人，也是普通信众一生中最重要的精神依靠。<br><br>一座寺院的主持活佛圆寂，信众会长期守候，等待转世者被找到、成长，再回来继续领导这一切。这种等待本身，就是一种信仰的表达。</div>
+      </div>
+      <div class="info-box ai">
+        <div class="info-box-title">西藏现有多少活佛？</div>
+        <div class="info-box-body">数以千计。达赖与班禅是最高位的两位，但每座重要寺院几乎都有自己的转世传承。在西藏旅行，你很可能在不经意间遇到一位被当地人尊称为「仁波切」的活佛。</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- S7 DALAI & PANCHEN -->
+<div class="slide" id="s7">
+  <div style="flex-shrink:0">
+    <div class="section-label" style="color:var(--sand)">Chapter 02 · 核心人物</div>
+    <div class="slide-title-light">达赖喇嘛与班禅喇嘛</div>
+  </div>
+  <div class="two-figures">
+    <div class="figure-card dalai ai">
+      <div class="figure-title">达赖喇嘛</div>
+      <div class="figure-subtitle">Dalai Lama · 观世音菩萨化身</div>
+      <div class="figure-desc">格鲁派最高精神领袖，被认为是<strong>慈悲菩萨观世音的转世</strong>，现为第十四世。历史上曾兼任西藏政治领袖，政教合一的象征。<br><br>1959年出走印度，在达兰萨拉建立流亡政府。1989年荣获诺贝尔和平奖。<br><br>在西藏，你几乎<strong>看不到他的照片</strong>——但他的存在感无处不在。信众不会公开谈起他，但心里清楚。这种沉默本身，就是一种表达。</div>
+      <div class="figure-note">达赖与班禅存在「相互认定」关系——两者互相参与对方转世的认定，这种制度上的相互依存，使两者关系在当代格外敏感。</div>
+    </div>
+    <div class="figure-card panchen ai">
+      <div class="figure-title">班禅喇嘛</div>
+      <div class="figure-subtitle">Panchen Lama · 阿弥陀佛化身</div>
+      <div class="figure-desc">格鲁派第二高位，被认为是<strong>阿弥陀佛的化身</strong>，以学识与禅修著称。驻锡地为日喀则扎什伦布寺。<br><br>1995年，第十世班禅圆寂后，认定转世问题引发争议——达赖喇嘛认定的候选人根敦确吉尼玛在被认定数日后失踪，至今下落不明，成为国际社会持续关注的议题。<br><br>对于许多藏人来说，第十一世班禅的问题，与其说是政治问题，不如说是一道<strong>无法愈合的伤</strong>。</div>
+      <div class="figure-note">扎什伦布寺至今仍是日喀则最重要的朝圣地，当地信众对班禅有着特别深厚的情感——尤其是对第十世。</div>
+    </div>
+  </div>
+</div>
+
+<!-- S8 10TH PANCHEN -->
+<div class="slide" id="s8">
+  <div class="left-panel">
+    <div class="section-label ai" style="color:var(--sand)">特别的人</div>
+    <div class="panchen10-name ai">第十世班禅喇嘛</div>
+    <div class="panchen10-en ai">Choekyi Gyaltsen · 确根确吉坚赞</div>
+    <div class="panchen10-years ai">1938 — 1989</div>
+    <div class="panchen10-quote ai">「我宁愿死在西藏，也不愿在北京活着。」</div>
+    <div class="panchen10-body ai">在藏人心中，他是那个<strong style="color:var(--light-gold)">留下来的人</strong>。在最黑暗的年代，他没有离开，用自己的身份和声音，尽力保护了一些东西。</div>
+    <div class="ai"><span class="p10-tag">敢于发声</span><span class="p10-tag">保护文化</span><span class="p10-tag">藏人心中的英雄</span></div>
+  </div>
+  <div class="right-panel">
+    <div class="section-label ai" style="color:var(--sand)">他的故事</div>
+    <div class="gold-rule ai" style="background:var(--maroon)"></div>
+    <div class="event-list ai">
+      <div class="event-item"><div class="event-year">1950s</div><div class="event-desc">年幼即被认定，在政治风云中成长。留在西藏，试图在新旧秩序间维护寺院与僧侣的生存空间。</div></div>
+      <div class="event-item"><div class="event-year">1962</div><div class="event-desc">向中央呈递长达七万字的请愿书，直言藏区寺庙被毁、僧众受难的实况——史称<strong>「七万言书」</strong>。随后被扣上「反动」帽子，遭到长达九年的批斗与监禁。</div></div>
+      <div class="event-item"><div class="event-year">1977</div><div class="event-desc">获平反释放。此后积极推动寺院重建，走遍西藏各地。今天你能看到的很多寺庙，都曾受益于他的努力。</div></div>
+      <div class="event-item"><div class="event-year">1989.1</div><div class="event-desc">在扎什伦布寺主持法会，公开谈及西藏所付出的代价。<strong>五天后，圆寂</strong>，年仅50岁。许多藏人至今相信，他是为西藏而死的。</div></div>
+      <div class="event-item" style="padding-top:.8rem;border-top:1px solid #EAD8C0">
+        <div class="event-year" style="color:var(--text-mid)">今天</div>
+        <div class="event-desc">在扎什伦布寺，你能感受到信众对他特别的情感。那不只是对一位宗教领袖的尊敬，更像是对一个<strong>陪伴他们走过最难时光的人</strong>的深深思念。</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- S9 PRACTICES -->
+<div class="slide" id="s9">
+  <div style="flex-shrink:0;margin-bottom:1vh">
+    <div class="section-label" style="color:var(--sand)">Chapter 03 · 修行</div>
+    <div class="slide-title-light">你会看到的</div>
+    <div style="font-size:.85rem;color:var(--sand);margin-top:.2rem;font-weight:300">这些在西藏随处可见的画面，背后都有意思</div>
+  </div>
+  <div class="practices-grid">
+    <div class="practice-card ai"><div class="practice-icon">🔄</div><div class="practice-name">转经轮</div><div class="practice-scene">老人手持铜筒，一边走路一边转动</div><div class="practice-meaning">经筒里装满经文，每转一圈等同诵读一遍。这是藏人把修行融入日常的方式——走路、等人、呼吸的每一刻都能做。</div></div>
+    <div class="practice-card ai"><div class="practice-icon">🙏</div><div class="practice-name">磕长头</div><div class="practice-scene">信众从家乡出发，五体投地，一步一叩首走向拉萨</div><div class="practice-meaning">有人走几个月，有人走一年多。每一次俯身，都是放下自我；每一次起身，都是再度发心。</div></div>
+    <div class="practice-card ai"><div class="practice-icon">📿</div><div class="practice-name">持诵咒语</div><div class="practice-scene">「嗡嘛呢叭咪吽」——这六个字刻在每一块玛尼石上</div><div class="practice-meaning">观世音菩萨的六字大明咒。念珠上的每一颗珠子，都是一次计数。这六个字，是整个西藏的背景音。</div></div>
+    <div class="practice-card ai"><div class="practice-icon">💬</div><div class="practice-name">辩经</div><div class="practice-scene">色拉寺院子里，僧侣两两相对，一人坐，一人站，击掌发问</div><div class="practice-meaning">这不是争架，是哲学训练。击掌是为了驱散无明、增强气势。你必须真正理解，才能开口。</div></div>
+    <div class="practice-card ai"><div class="practice-icon">🏔</div><div class="practice-name">经幡</div><div class="practice-scene">山口、屋顶、寺庙门前，五色旗随风飘扬</div><div class="practice-meaning">蓝白红绿黄，代表天空、风、火、水、土。经幡随风飘动，经文就被风带向四方，为众生祈福。</div></div>
+    <div class="practice-card ai"><div class="practice-icon">🎭</div><div class="practice-name">跳神（羌姆）</div><div class="practice-scene">节日里，寺院广场上，僧侣戴着面具起舞</div><div class="practice-meaning">这是宗教仪式，不是表演。护法神降临，驱除邪祟。每一个面具都代表一位神祇，每个动作都有象征意义。</div></div>
+  </div>
+</div>
+
+<!-- S10 TEMPLES — with photo collage -->
+<div class="slide" id="s10">
+  <div class="temples-content">
+    <div style="flex-shrink:0;margin-bottom:1vh">
+      <div class="section-label" style="color:var(--sand)">Chapter 04 · 寺庙</div>
+      <div class="slide-title-dark">值得去的寺庙</div>
+      <div style="font-size:.85rem;color:var(--text-mid);margin-top:.2rem;font-weight:300">不只是景点，而是还在活着的宗教空间</div>
+    </div>
+    <div class="temples-grid">
+      <div class="temple-card ai"><div class="temple-accent" style="background:var(--maroon)"></div><div class="temple-body"><div class="temple-name">大昭寺</div><div class="temple-loc">Jokhang Temple · 拉萨</div><div class="temple-desc">藏传佛教最神圣的寺院，供奉文成公主带来的释迦牟尼12岁等身像。广场上常年有磕长头的信众，香烟缭绕。</div><div class="temple-tip">☞ 清晨来，看转经的信众</div></div></div>
+      <div class="temple-card ai"><div class="temple-accent" style="background:#4A3570"></div><div class="temple-body"><div class="temple-name">色拉寺</div><div class="temple-loc">Sera Monastery · 拉萨</div><div class="temple-desc">拉萨三大寺之一，格鲁派寺院。每天下午的辩经是这里最值得观看的场景，数十名僧侣分组辩论，热烈而庄严。</div><div class="temple-tip">☞ 下午3点去辩经院</div></div></div>
+      <div class="temple-card ai"><div class="temple-accent" style="background:#1A3D5C"></div><div class="temple-body"><div class="temple-name">扎什伦布寺</div><div class="temple-loc">Tashilhunpo · 日喀则</div><div class="temple-desc">班禅喇嘛的驻锡地，供奉世界最大的镀金弥勒佛像。信众对第十世班禅有着特别深厚的情感。</div><div class="temple-tip">☞ 留心那份特别的敬爱</div></div></div>
+      <div class="temple-card ai"><div class="temple-accent" style="background:#1E4A1E"></div><div class="temple-body"><div class="temple-name">桑耶寺</div><div class="temple-loc">Samye Monastery · 山南</div><div class="temple-desc">西藏第一座正式寺院，由莲花生大士主持兴建，建筑格局模拟佛教宇宙观。藏传佛教真正的起点。</div><div class="temple-tip">☞ 偏远但无可替代</div></div></div>
+    </div>
+  </div>
+  <!-- Photo collage -->
+  <div class="photo-collage">
+    <div class="photo-panel">
+      <img src="https://image.cdn-eztravel.com.tw/41E8CAaAONAxfOHQqGW8jgIHHisSfgotFBfK-gHYnpE/g:ce/aHR0cHM6Ly92YWNhdGlvbi5jZG4tZXp0cmF2ZWwuY29tLnR3L2ltZy9WRFIvQ05fMjEwMTQxNDQyLmpwZw.jpg"
+           onerror="this.parentElement.style.background='linear-gradient(135deg,#3D0C0C,#1E0505)';this.style.display='none'"
+           alt="大昭寺">
+      <div class="photo-overlay"></div>
+      <div class="photo-credit">大昭寺 · 拉萨</div>
+    </div>
+    <div class="photo-panel">
+      <img src="https://lh3.googleusercontent.com/gps-cs-s/APNQkAFZ9xaZaOCQSVh1a2VML0LLwjhIbY0wUXkk4YyFB2j6Wg2N-JTyYXEGutW5To2e9sHuxX9V95oh3S3u9rB1kxA5ukzoMLL9iC5a_ouR_pHWqZGh02IobBVjNeb9umFQeK15xmF3-A=s1360-w1360-h1020-rw"
+           onerror="this.parentElement.style.background='linear-gradient(135deg,#1A3D5C,#1E0505)';this.style.display='none'"
+           alt="扎什伦布寺">
+      <div class="photo-overlay"></div>
+      <div class="photo-credit">扎什伦布寺 · 日喀则</div>
+    </div>
+  </div>
+</div>
+
+<!-- S11 CLOSING -->
+<div class="slide" id="s11">
+  <div class="mandala-bg"></div><div class="mandala-bg"></div><div class="mandala-bg"></div>
+  <div class="closing-mantra">OM MANI PADME HUM</div>
+  <div class="closing-main ai">带着这些去西藏<br>你会看见不一样的东西</div>
+  <div class="closing-rule ai"></div>
+  <div class="closing-sub ai">转经轮为什么顺时针转，经幡为什么是五种颜色，<br>辩经的僧侣击掌是什么意思，扎什伦布寺的僧侣<br>为什么会用那种眼神看着某张照片——<br>现在你知道了。</div>
+  <div class="closing-tashi ai">扎西德勒</div>
+  <div class="closing-meaning ai">吉祥如意</div>
+</div>
+
+</div>
+
+<div class="nav">
+  <button onclick="prev()">←</button>
+  <div class="nav-dots" id="dots"></div>
+  <button onclick="next()">→</button>
+  <div class="slide-counter" id="counter">1 / 11</div>
+</div>
+
+<script>
+const slides=document.querySelectorAll('.slide');
+const total=slides.length;
+let current=0;
+const dotsEl=document.getElementById('dots');
+const counterEl=document.getElementById('counter');
+slides.forEach((_,i)=>{
+  const d=document.createElement('div');
+  d.className='dot'+(i===0?' active':'');
+  d.onclick=()=>goTo(i);
+  dotsEl.appendChild(d);
+});
+function goTo(n){
+  slides[current].classList.remove('active');
+  dotsEl.children[current].classList.remove('active');
+  current=(n+total)%total;
+  slides[current].classList.add('active');
+  dotsEl.children[current].classList.add('active');
+  counterEl.textContent=(current+1)+' / '+total;
+}
+function next(){goTo(current+1);}
+function prev(){goTo(current-1);}
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight'||e.key==='ArrowDown'||e.key===' '){e.preventDefault();next();}
+  if(e.key==='ArrowLeft'||e.key==='ArrowUp'){e.preventDefault();prev();}
+});
+let touchX=0;
+document.addEventListener('touchstart',e=>touchX=e.touches[0].clientX);
+document.addEventListener('touchend',e=>{const dx=e.changedTouches[0].clientX-touchX;if(Math.abs(dx)>50)dx<0?next():prev();});
+</script>
+</body>
+</html>
